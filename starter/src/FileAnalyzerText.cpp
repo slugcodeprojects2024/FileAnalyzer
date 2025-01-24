@@ -49,6 +49,7 @@ std::string FileAnalyzerText::mostCommonWord() const {
   while (stream >> word) {
     word_count[word]++;
   }
+  if (word_count.empty()) return "";
   auto max_it = std::max_element(word_count.begin(), word_count.end(),
                                 [](const auto& a, const auto& b) {
                                   return a.second < b.second;
@@ -63,6 +64,7 @@ std::string FileAnalyzerText::leastCommonWord() const {
   while (stream >> word) {
     word_count[word]++;
   }
+  if (word_count.empty()) return "";
   auto min_it = std::min_element(word_count.begin(), word_count.end(),
                                 [](const auto& a, const auto& b) {
                                   return a.second < b.second;

@@ -75,6 +75,18 @@ int main(int argc, char* argv[]) {
 
   if (get_size) {
     std::vector<std::string> allowed_extensions = {".c", ".cpp", ".h", ".csv", ".txt", ".wav", ".png"};
+    bool valid_extension = false;
+    for (const auto& ext : allowed_extensions) {
+        if (filename.size() >= ext.size() && filename.compare(filename.size() - ext.size(), ext.size(), ext) == 0) {
+            valid_extension = true;
+            break;
+        }
+    }
+    if (!valid_extension) {
+        std::cout << "Unsupported file extension." << std::endl;
+        return 0;
+    }
+    
     std::cout << FileAnalyzerFile(filename, allowed_extensions).file_size() << std::endl;
   } else if (png_get_width) {
     std::cout << FileAnalyzerPng(filename).width() << std::endl;

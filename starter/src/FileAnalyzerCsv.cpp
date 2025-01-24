@@ -32,7 +32,7 @@ size_t FileAnalyzerCsv::rows() const {
 }
 
 bool FileAnalyzerCsv::verifyDimensions() const {
-    size_t expected = columns();
+    size_t expected_columns = columns();
     std::istringstream stream(std::string(contents_.get(), file_size_));
     std::string line;
     while (std::getline(stream, line)) {
@@ -41,7 +41,7 @@ bool FileAnalyzerCsv::verifyDimensions() const {
         for (char c : line) {
             if (c == ',') count++;
         }
-        if (count != expected) return false;
+        if (count != expected_columns) return false;
     }
     return true;
 }

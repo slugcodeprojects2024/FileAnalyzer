@@ -16,7 +16,8 @@ FileAnalyzerFile::FileAnalyzerFile(
     valid_extension |= hasExtension(filename, extension);
   }
   if (!valid_extension) {
-    std::cerr << "Warning: Unsupported file extension for file: " << filename << std::endl;
+    std::cerr << "Unsupported file extension." << std::endl;
+    exit(0);
   }
   LoadFile(filename);
 }
