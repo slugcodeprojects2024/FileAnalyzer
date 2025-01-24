@@ -107,7 +107,10 @@ int main(int argc, char* argv[]) {
   } else if (code_check_parens) {
     std::cout << (FileAnalyzerCode(filename).checkParens() ? "1" : "0") << std::endl;
   } else if (text_get_most_common) {
-    std::cout << FileAnalyzerText(filename).mostCommonWord() << std::endl;
+    std::string most_common_word = FileAnalyzerText(filename).mostCommonWord();
+    if (!most_common_word.empty()) {
+      std::cout << most_common_word << std::endl;
+    }
   } else if (text_get_least_common) {
     std::cout << FileAnalyzerText(filename).leastCommonWord() << std::endl;
   } else if (text_get_letter_count) {
