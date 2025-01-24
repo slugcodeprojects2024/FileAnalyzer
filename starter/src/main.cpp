@@ -2,13 +2,13 @@
 #include <iostream>
 #include <vector>
 #include <string>
-
 #include "CLI/CLI.hpp"
-#include "src/FileAnalyzer.h"
-#include "src/FileAnalyzerWav.h"
-#include "src/FileAnalyzerCsv.h"
-#include "src/FileAnalyzerText.h"
-#include "src/FileAnalyzerCode.h"
+#include "FileAnalyzer.h"
+#include "FileAnalyzerWav.h"
+#include "FileAnalyzerCsv.h"
+#include "FileAnalyzerText.h"
+#include "FileAnalyzerCode.h"
+#include "FileAnalyzerPng.h"
 
 int main(int argc, char* argv[]) {
     std::string filename;
@@ -47,39 +47,65 @@ int main(int argc, char* argv[]) {
     CLI11_PARSE(app, argc, argv);
 
     // Get file extension
-    size_t dot_pos = filename.find_last_of(".");
+    size_t dot_pos = filename.rfind('.');
     if (dot_pos == std::string::npos) {
         std::cout << "Unsupported file extension." << std::endl;
         return 1;
     }
     std::string ext = filename.substr(dot_pos + 1);
-    
-    // Handle operations based on file type
+
+    std::vector<std::string> wav_exts = {".wav"};
+    std::vector<std::string> csv_exts = {".csv"};
+    std::vector<std::string> txt_exts = {".txt"};
+    std::vector<std::string> code_exts = {".c", ".cpp", ".h"};
+    std::vector<std::string> png_exts = {".png"};
+
     if (get_size) {
-        FileAnalyzerFile file(filename);
-        std::cout << file.GetSize() << std::endl;
+        if (ext == "wav") {
+            FileAnalyzerWav file(filename);
+            std::cout << file.getSize() << std::endl;
+        } else if (ext == "csv") {
+            FileAnalyzerCsv file(filename);
+            std::cout << file.getSize() << std::endl;
+        } else if (ext == "txt") {
+            FileAnalyzerText file(filename);
+            std::cout << file.getSize() << std::endl;
+        } else if (ext == "c" || ext == "cpp" || ext == "h") {
+            FileAnalyzerCode file(filename);
+            std::cout << file.getSize() << std::endl;
+        } else if (ext == "png") {
+            FileAnalyzerPng file(filename);
+            std::cout << file.getSize() << std::endl;
+        } else {
+            std::cout << "Unsupported file extension." << std::endl;
+            return 1;
+        }
         return 0;
     }
 
     if (ext == "wav") {
         FileAnalyzerWav wav(filename);
-        if (wav_get_bitrate) wav.WavGetBitrate();
-        if (wav_get_channels) wav.WavGetChannels();
+        if (wav_get_bitrate) wav.getBitrate();
+        if (wav_get_channels) wav.getChannels();
     } else if (ext == "csv") {
         FileAnalyzerCsv csv(filename);
-        if (csv_get_rows) csv.CsvGetRows();
-        if (csv_get_columns) csv.CsvGetColumns();
-        if (csv_verify_dimensions) csv.CsvVerifyDimensions();
+        if (csv_get_rows) csv.getRows();
+        if (csv_get_columns) csv.getColumns();
+        if (csv_verify_dimensions) csv.verifyDimensions();
     } else if (ext == "txt") {
         FileAnalyzerText text(filename);
-        if (text_get_letter_count) text.TextGetLetterCount();
-        if (text_get_letter_count_sorted) text.TextGetLetterCountSorted();
-        if (text_get_most_common) text.TextGetMostCommon();
-        if (text_get_least_common) text.TextGetLeastCommon();
+        if (text_get_letter_count) text.letterCount();
+        if (text_get_letter_count_sorted) text.letterCountSorted();
+        if (text_get_most_common) text.getMostCommon();
+        if (text_get_least_common) text.getLeastCommon();
     } else if (ext == "c" || ext == "cpp" || ext == "h") {
         FileAnalyzerCode code(filename);
-        if (code_get_lines) code.CodeGetLines();
-        if (code_check_parens) code.CodeCheckParens();
+        if (code_get_lines) code.getLines();
+        if (code_check_parens) code.checkParens();
+    } else if (ext == "png") {
+        FileAnalyzerPng png(filename);
+        if (png_get_width) png.getWidth();
+        if (png_get_height) png.getHeight();
     } else {
         std::cout << "Unsupported file extension." << std::endl;
         return 1;
