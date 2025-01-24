@@ -54,7 +54,30 @@ std::string FileAnalyzerText::mostCommonWord() const {
                                 [](const auto& a, const auto& b) {
                                   return a.second < b.second;
                                 });
-  return max_it->first;
+  if (word_count.empty()) return "";  // Fix: Return empty output for empty file
+
+    size_t max_freq = 0;
+    std::vector<std::string> most_common_words;
+
+    for (const auto& [key, value] : word_count) {
+        if (value > max_freq) {
+            max_freq = value;
+            most_common_words.clear();
+            most_common_words.push_back(key);
+        } else if (value == max_freq) {
+            most_common_words.push_back(key);
+        }
+    }
+
+    std::sort(most_common_words.begin(), most_common_words.end());  // Sort alphabetically
+
+    std::ostringstream result;
+    for (size_t i = 0; i < most_common_words.size(); ++i) {
+        if (i > 0) result << " ";
+        result << most_common_words[i];
+    }
+
+    return result.str();
 }
 
 std::string FileAnalyzerText::leastCommonWord() const {
